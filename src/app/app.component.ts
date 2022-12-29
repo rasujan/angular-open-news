@@ -1,8 +1,10 @@
+import { NewsService } from './news.service';
 import {
   AfterViewInit,
   Component,
   ViewChild,
   ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -10,7 +12,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 interface articleType {
   author: String;
   urlToImage: String;
-  publishedAt: String;
+  publishedAt: any;
   title: String;
   description: String;
   url: String;
@@ -21,36 +23,32 @@ interface articleType {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   title = 'theGlobalTimes';
+
+  selectedNewsChannel: string = 'Top 10 Trending News!';
+
+  public sources: any[] = [];
+  public articles: articleType[] = [];
 
   @ViewChild(MatSidenav) sideNav!: MatSidenav;
 
   constructor(
     private observer: BreakpointObserver,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private newsApi: NewsService
   ) {}
 
-  articles: articleType[] = [
-    {
-      author: 'sujan',
-      urlToImage: 'https://www.w3schools.com/css/paris.jpg',
-      publishedAt: '2022-12-12',
-      title: 'abc',
-      description: 'asdfaf',
-      url: 'https://www.w3schools.com/css/paris.jpg',
-    },
-  ];
-
-  selectedNewsChannel = 'ABC';
-  article: articleType = {
-    author: 'sujan',
-    urlToImage: 'mm',
-    publishedAt: '2022-12-12',
-    title: 'abc',
-    description: 'asdfaf',
-    url: 'asdfasd',
-  };
+  ngOnInit(): void {
+    this.newsApi.initArticles().subscribe((res: any) => {
+      console.log(res);
+      this.articles = res.articles;
+    });
+    this.newsApi.initSources().subscribe((res: any) => {
+      console.log(res);
+      this.sources = res.sources;
+    });
+  }
 
   ngAfterViewInit(): void {
     this.sideNav.opened = true;
@@ -64,5 +62,12 @@ export class AppComponent implements AfterViewInit {
       }
     });
     this.cdr.detectChanges();
+  }
+
+  searchSource(source: any) {
+    this.newsApi.getArticlesByID(source.id).subscribe((res: any) => {
+      this.selectedNewsChannel = source.name;
+      this.articles = res.articles;
+    });
   }
 }
