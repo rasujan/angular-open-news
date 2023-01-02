@@ -9,6 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
+import {HeadlinesModule} from "./headlines/headlines.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatDividerModule,
     MatIconModule,
     HttpClientModule,
+    HeadlinesModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

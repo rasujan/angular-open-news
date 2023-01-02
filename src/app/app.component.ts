@@ -9,7 +9,7 @@ import {
 import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver } from '@angular/cdk/layout';
 
-interface articleType {
+export interface articleType {
   author: String;
   urlToImage: String;
   publishedAt: any;
